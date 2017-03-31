@@ -1,3 +1,5 @@
+Origem: github/wuerges:
+
 # Computacao Distribuida 2016-1
 
 Este e' um conjunto de exemplos para a disciplina de Computacao Distribuida da UFFS de 2016-1.
