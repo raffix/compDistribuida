@@ -7,8 +7,6 @@ from bottle import run, get, post, view, request, redirect
 import bottle
 from urllib3.exceptions import MaxRetryError
 
-bottle.debug(True)
-
 peers = set(sys.argv[2:])
 messages = set([("Nobody", "Hello!")])
 nick = "Nobody"

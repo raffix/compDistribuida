@@ -4,11 +4,15 @@ import json
 import requests
 from threading import Thread
 from bottle import run, get, post, view, request, redirect
+import bottle
 from urllib3.exceptions import MaxRetryError
+
+bottle.debug(True)
 
 peers = set(sys.argv[2:])
 messages = set([("Nobody", "Hello!")])
 nick = "Nobody"
+myId = sys.argv[1]
 
 #ServerSide
 @get('/')
@@ -33,14 +37,14 @@ def myPeers():
 def getPeersFrom(host):
 	link = "http://localhost:"+ host + "/peers"
 	try:
-		resposta = requests.get(link)
+		resposta = requests.post(link, data={'id' : myId})	
 		if resposta.status_code == 200:
 			payload=json.loads(resposta.text)
 			return set(payload)
 	except MaxRetryError:
-		print ("Conection Error, número maximo de tentativas!")
+		print("Conection Error, numero maximo de tentativas")
 	except requests.exceptions.ConnectionError:
-		print ("Conection Error!")
+		print("Conection Error!")
 
 	return set([])
 
@@ -70,7 +74,7 @@ def getMessagesFrom(host):
 			payload = set((a, b) for [a,b] in mensagens)
 			return payload
 	except MaxRetryError:
-		print ("Conection Error, número maximo de tentativas!")
+		print ("Conection Error, numero maximo de tentativas!")
 	except requests.exceptions.ConnectionError:
 		print ("Conection Error!")
 
