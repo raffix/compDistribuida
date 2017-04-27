@@ -13,6 +13,7 @@ peers = set(sys.argv[2:])
 messages = set([("Nobody", "Hello!")])
 nick = "Nobody"
 myId = sys.argv[1]
+clock = 1
 
 #ServerSide
 @get('/')
@@ -22,14 +23,18 @@ def index():
 
 @post('/send')
 def sendMessage():
+	global clock
+	clock += 1 
     global nick
     m = request.forms.get('message')
     nick = request.forms.get('nick')
-    messages.add((nick, m))
+    messages.add((nick, m))   
     redirect('/')
 
 @post('/peers')
 def myPeers():
+	global clock
+	clock += 1
 	peers.union(request.forms.get('id'))
 	data = json.dumps(list(peers))
 	return data
@@ -49,6 +54,8 @@ def getPeersFrom(host):
 	return set([])
 
 def serverSide():
+	global clock
+	clock += 1
 	while True:
 		time.sleep(5)
 		N = set([])
@@ -62,6 +69,8 @@ def serverSide():
 #ClienteSide	
 @get('/message')
 def getPeers():
+	global clock
+	clock += 1
 	data = json.dumps(list(messages))
 	return data
 
@@ -81,6 +90,8 @@ def getMessagesFrom(host):
 	return set([])
 
 def clientSide():
+	global clock
+	clock += 1
 	while True:
 		time.sleep(5)
 		N = set([])
