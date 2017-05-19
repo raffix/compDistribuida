@@ -2,6 +2,7 @@ import sys
 import time
 import json
 import requests
+from vector import VectorClock
 from threading import Thread
 from bottle import run, get, post, view, request, redirect
 import bottle
@@ -10,7 +11,11 @@ from urllib3.exceptions import MaxRetryError
 bottle.debug(True)
 
 peers = set(sys.argv[2:])
-messages = set([("Nobody", "Hello!")])
+messages = set([("Nobody", "Hello!", 0)])
+	
+
+messages.sort(key=lambda x: x[2])
+
 nick = "Nobody"
 myId = sys.argv[1]
 clock = 1
@@ -28,7 +33,7 @@ def sendMessage():
     global nick
     m = request.forms.get('message')
     nick = request.forms.get('nick')
-    messages.add((nick, m))   
+    messages.add((nick, m, clock))   
     redirect('/')
 
 @post('/peers')
@@ -80,7 +85,7 @@ def getMessagesFrom(host):
 		resposta = requests.get(link)
 		if resposta.status_code == 200:
 			mensagens = json.loads(resposta.text)
-			payload = set((a, b) for [a,b] in mensagens)
+			payload = set((a, b, c) for [a,b,c] in mensagens)
 			return payload
 	except MaxRetryError:
 		print ("Conection Error, numero maximo de tentativas!")
@@ -110,3 +115,6 @@ threadServer.start()
 
 
 run(host='localhost', port=sys.argv[1])
+
+
+# Relogios vetores
