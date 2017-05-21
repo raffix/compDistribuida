@@ -11,7 +11,6 @@ from urllib3.exceptions import MaxRetryError
 bottle.debug(True)
 
 peers = set(sys.argv[2:])
-
 messages = set([("Nobody", "Hello!", 0)])
 messages.sort(key=lambda x: x[2])
 
@@ -117,6 +116,3 @@ threadServer.start()
 
 
 run(host='localhost', port=sys.argv[1])
-
-
-# Relogios vetores
