@@ -10,10 +10,10 @@
 </head>
 
 <body>
-  <h3> T1.p1: Chat de texto </h3>
+  <h3> Chat de texto distribuido </h3>
   <div class="row">
   <ul>
-  %for (n, m) in messages:
+  %for (n, m, k) in messages:
       <li> <b>{{n}}: </b> {{m}} </li>
   %end
   </ul>

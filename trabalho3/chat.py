@@ -100,9 +100,8 @@ def clientSide():
         global messages
         for host in peers:
             resposta = getMessagesFrom(host)
-            if resposta.difference(messages) and resposta:
-                N = N.union(resposta.difference(messages))
-                messages = messages.union(N)
+            N = N.union(resposta.difference(messages))
+            messages = messages.union(N)
         for line in messages :
             relogio.unionClocks(line[2])
 
