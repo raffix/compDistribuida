@@ -16,8 +16,7 @@ class VectorClock:
 
     def unionClocks(self, v):
         v = json.loads(v)
-        v = list(v)
-        for k, e in v.time.items():
+        for k, e in v.items():
             if not k in self.time or self.time[k] < e :
                 self.time[k] = e
 

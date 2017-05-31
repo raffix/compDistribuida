@@ -11,13 +11,14 @@ from urllib3.exceptions import MaxRetryError
 bottle.debug(True)
 
 peers = set(sys.argv[2:])
-messages = set([("Nobody", "Hello!", 0)])
 
 nick = "Nobody"
 myId = sys.argv[1]
 
 #Relogios
 relogio = VectorClock(myId)
+
+messages = set([("Nobody", "Hello!", relogio.getClocks())])
 
 #ServerSide
 @get('/')
@@ -103,7 +104,7 @@ def clientSide():
             N = N.union(resposta.difference(messages))
             messages = messages.union(N)
         for line in messages :
-            relogio.unionClocks(line[2])
+           	relogio.unionClocks(line[2])
 
 threadClient=Thread(None, clientSide, (), {}, None)
 threadClient.start()
