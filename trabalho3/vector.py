@@ -22,4 +22,4 @@ class VectorClock:
 
     def getClocks(self):
         saida = json.dumps(self.time)
-        return saida
+        return str(saida)

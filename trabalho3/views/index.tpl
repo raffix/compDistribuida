@@ -14,7 +14,7 @@
   <div class="row">
   <ul>
   %for (n, m, k) in messages:
-      <li> <b>{{n}}: </b> {{m}} </li>
+      <li> <b>{{n}}: </b> {{m}} <p>{{k}}</p> </li>
   %end
   </ul>
   </div>
