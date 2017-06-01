@@ -4,8 +4,8 @@ import json
 import requests
 from vector import VectorClock
 from threading import Thread
-from bottle import run, get, post, view, request, redirect
 import bottle
+from bottle import run, get, post, view, request, redirect
 from urllib3.exceptions import MaxRetryError
 
 bottle.debug(True)
