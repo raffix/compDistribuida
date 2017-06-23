@@ -18,7 +18,7 @@ myId = sys.argv[1]
 #Relogios
 relogio = VectorClock(myId)
 
-messages = set([("Nobody", "Hello!", relogio.getClocks())])
+messages = set([("Nobody", "Hello!", srt(relogio.getClocks()))])
 
 #ServerSide
 @get('/')
@@ -33,7 +33,7 @@ def sendMessage():
     global nick
     m = request.forms.get('message')
     nick = request.forms.get('nick')
-    messages.add((nick, m, relogio.getClocks))
+    messages.add((nick, m, relogio.getClocks()))
     redirect('/')
 
 @post('/peers')
