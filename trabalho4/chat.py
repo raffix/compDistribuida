@@ -6,16 +6,24 @@ from threading import Thread
 from bottle import run, get, post, view, request, redirect
 import bottle
 import hashlib
+import base64
 from urllib3.exceptions import MaxRetryError
 
 messages = set([("Nobody", "Hello!")])
 nick = "Nobody"
+
 myId = sys.argv[1]
 
-myHash = hashlib.sha256(myId."UmSalMuitoLongoParaIssoFuncionar+-131231241231241512431251231231232")
-dht = list[(myHash, myID)]
+temp = bytes("string" +myId, 'utf-8')
 
-files = set(['myHash', 'Meu Id'])
+myHash = hashlib.sha256()
+myHash.update(temp)
+
+print('Local Hash : '+myHash.hexdigest()+'\n')
+
+#DHT kademlia type
+DHTK = {}
+DHTK[str(myHash.hexdigest())] = myId
 
 #ServerSide
 @get('/')
