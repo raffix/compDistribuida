@@ -7,6 +7,7 @@ from bottle import run, get, post, view, request, redirect
 import bottle
 import hashlib
 import base64
+from dhtademlia import dhtkad
 from urllib3.exceptions import MaxRetryError
 
 messages = set([("Nobody", "Hello!")])
@@ -16,14 +17,9 @@ myId = sys.argv[1]
 
 temp = bytes("string" +myId, 'utf-8')
 
-myHash = hashlib.sha256()
-myHash.update(temp)
+print('Local Hash : '+ myHash.hexdigest() +'\n')
 
-print('Local Hash : '+myHash.hexdigest()+'\n')
-
-#DHT kademlia type
-DHTK = {}
-DHTK[str(myHash.hexdigest())] = myId
+myDht = dhtkad(myId)
 
 #ServerSide
 @get('/')
