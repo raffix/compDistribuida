@@ -10,16 +10,14 @@ import base64
 from dhtademlia import dhtkad
 from urllib3.exceptions import MaxRetryError
 
-messages = set([("Nobody", "Hello!")])
-nick = "Nobody"
+messages = set([("Your nick here", "Your message!")])
+nick = "noNick"
 
 myId = sys.argv[1]
-
-temp = bytes("string" +myId, 'utf-8')
+myDht = dhtkad(myId)
+myDht.add(sys.argv[2])
 
 print('Local Hash : '+ myHash.hexdigest() +'\n')
-
-myDht = dhtkad(myId)
 
 #ServerSide
 @get('/')
@@ -37,8 +35,9 @@ def sendMessage():
 
 @post('/peers')
 def myPeers():
-	peers.union(request.forms.get('id'))
-	data = json.dumps(list(peers))
+	host = request.forms.get('id')
+	myDht.add(host)
+	data = json.dumps(list(myDht.dht))
 	return data
 
 def getPeersFrom(host):
@@ -52,19 +51,16 @@ def getPeersFrom(host):
 		print("Conection Error, numero maximo de tentativas")
 	except requests.exceptions.ConnectionError:
 		print("Conection Error!")
-
 	return set([])
 
 def serverSide():
 	while True:
 		time.sleep(5)
-		N = set([])
 		global peers
-		for host in peers:
+		for host in DHT.dht:
 			lista = getPeersFrom(host)
-			if lista.difference(peers) and lista:
-				N = N.union(lista.difference(peers))
-		peers = peers.union(N)
+			for n in lista:
+				myDht.add(n)
 
 #ClienteSide
 @get('/message')

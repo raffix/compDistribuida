@@ -20,6 +20,7 @@ class dhtkad:
 		hostHash = haslib.sha256()
 		hostHash.update(host)
 		if self.compare(hostHash.digest()) > 1 :
-			self.dht[hostHash.digest()] = host
-			return 1
+			if self.dht[hostHash.digest()] != NULL:
+				self.dht[hostHash.digest()] = host
+				return 1
 		return 0
