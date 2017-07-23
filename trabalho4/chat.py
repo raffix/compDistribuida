@@ -5,9 +5,7 @@ import requests
 from threading import Thread
 from bottle import run, get, post, view, request, redirect
 import bottle
-import hashlib
-import base64
-from dhtademlia import dhtkad
+from dhtkademlia import dhtkad
 from urllib3.exceptions import MaxRetryError
 
 messages = set([("Your nick here", "Your message!")])
@@ -15,9 +13,10 @@ nick = "noNick"
 
 myId = sys.argv[1]
 myDht = dhtkad(myId)
-myDht.add(sys.argv[2])
+firstPeer = sys.argv[2]
+myDht.addHost(firstPeer)
 
-print('Local Hash : '+ myHash.hexdigest() +'\n')
+print('Local Hash : '+ myDht.myHash.hexdigest() +'\n')
 
 #ServerSide
 @get('/')
@@ -36,7 +35,7 @@ def sendMessage():
 @post('/peers')
 def myPeers():
 	host = request.forms.get('id')
-	myDht.add(host)
+	myDht.addHost(host)
 	data = json.dumps(list(myDht.dht))
 	return data
 
@@ -56,8 +55,7 @@ def getPeersFrom(host):
 def serverSide():
 	while True:
 		time.sleep(5)
-		global peers
-		for host in DHT.dht:
+		for host in myDht.dht:
 			lista = getPeersFrom(host)
 			for n in lista:
 				myDht.add(n)
@@ -88,7 +86,7 @@ def clientSide():
 		time.sleep(5)
 		N = set([])
 		global messages
-		for host in peers:
+		for host in myDht.dht:
 			resposta = getMessagesFrom(host)
 			if resposta.difference(messages) and resposta:
 				N = N.union(resposta.difference(messages))
