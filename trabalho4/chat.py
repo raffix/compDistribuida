@@ -16,8 +16,6 @@ myDht = dhtkad(myId)
 firstPeer = sys.argv[2]
 myDht.addHost(firstPeer)
 
-print('Local Hash : '+ myDht.myHash.hexdigest() +'\n')
-
 #ServerSide
 @get('/')
 @view('index')
@@ -40,25 +38,27 @@ def myPeers():
 	return data
 
 def getPeersFrom(host):
-	link = "http://localhost:"+ host + "/peers"
-	try:
-		resposta = requests.post(link, data={'id' : myId})
-		if resposta.status_code == 200:
-			payload=json.loads(resposta.text)
-			return set(payload)
-	except MaxRetryError:
-		print("Conection Error, numero maximo de tentativas")
-	except requests.exceptions.ConnectionError:
-		print("Conection Error!")
-	return set([])
+    link = "http://localhost:"+ host + "/peers"
+    try:
+        resposta = requests.post(link, data={'id' : myId})
+        if resposta.status_code == 200:
+            payload=json.loads(resposta.text)
+            return set(payload)
+    except MaxRetryError:
+        print("Conection Error, numero maximo de tentativas")
+    except requests.exceptions.ConnectionError:
+        print("Conection Error!")
+    return set([])
 
 def serverSide():
-	while True:
-		time.sleep(5)
-		for host in myDht.dht:
-			lista = getPeersFrom(host)
-			for n in lista:
-				myDht.add(n)
+    while True:
+        time.sleep(5)
+        N = set([])
+        for key in myDht.dht:
+            lista = getPeersFrom(myDht.dht[key])
+            if lista.difference(myDht.dht) and lista:
+                N = N.union(lista.difference(myDht.dht))
+                myDht.dht = myDht.dht.union(N)
 
 #ClienteSide
 @get('/message')
@@ -67,27 +67,26 @@ def getPeers():
 	return data
 
 def getMessagesFrom(host):
-	link = "http://localhost:"+ host + "/message"
-	try:
-		resposta = requests.get(link)
-		if resposta.status_code == 200:
-			mensagens = json.loads(resposta.text)
-			payload = set((a, b) for [a,b] in mensagens)
-			return payload
-	except MaxRetryError:
-		print ("Conection Error, numero maximo de tentativas!")
-	except requests.exceptions.ConnectionError:
-		print ("Conection Error!")
-
-	return set([])
+    link = "http://localhost:"+ host + "/message"
+    try:
+        resposta = requests.get(link)
+        if resposta.status_code == 200:
+            mensagens = json.loads(resposta.text)
+            payload = set((a, b) for [a,b] in mensagens)
+            return payload
+    except MaxRetryError:
+        print ("Conection Error, numero maximo de tentativas!")
+    except requests.exceptions.ConnectionError:
+        print ("Conection Error!")
+    return set([])
 
 def clientSide():
 	while True:
 		time.sleep(5)
 		N = set([])
 		global messages
-		for host in myDht.dht:
-			resposta = getMessagesFrom(host)
+		for key in myDht.dht:
+			resposta = getMessagesFrom(myDht.dht[key])
 			if resposta.difference(messages) and resposta:
 				N = N.union(resposta.difference(messages))
 		messages = messages.union(N)

@@ -17,11 +17,11 @@ class dhtkad:
         return numberEquals
 
     def addHost(self, host):
+        print(host)
         hostHash = hashlib.sha256()
         host_bytes = host.encode('utf-8')
         hostHash.update(host_bytes)
-        if self.compare(hostHash.hexdigest()) > 1 :
-            if self.dht[hostHash.hexdigest()] != NULL:
-                self.dht[hostHash.hexdigest()] = host
-                return 1
-        return 0
+#        if self.compare(hostHash.hexdigest()) > 1 :
+        if(not hostHash.hexdigest() in self.dht):
+            self.dht[hostHash.hexdigest()] = host
+        return 1
