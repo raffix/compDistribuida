@@ -17,7 +17,6 @@ class dhtkad:
         return numberEquals
 
     def addHost(self, host):
-        print(host)
         hostHash = hashlib.sha256()
         host_bytes = host.encode('utf-8')
         hostHash.update(host_bytes)
