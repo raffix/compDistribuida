@@ -24,3 +24,12 @@ class dhtkad:
         if(not hostHash.hexdigest() in self.dht):
             self.dht[hostHash.hexdigest()] = host
         return 1
+        
+    def addFile(self, fileName):
+        fileHash = hashlib.sha256()
+        fileHash.update(fileName.encode('utf-8')
+        if( self.compare(fileHash.hexdigest()) > 1:
+            if(not fileHash.hexdigest() in self.dht):
+                self.dht[fileHash.hexdigest()] = fileName
+            return 1
+        return 0
