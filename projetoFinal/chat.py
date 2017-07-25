@@ -62,20 +62,6 @@ def getPeers():
 	data = json.dumps(list(messages))
 	return data
 
-#def getMessagesFrom(host):
-#    link = "http://localhost:"+ host + "/message"
-#    try:
-#        resposta = requests.get(link)
-#        if resposta.status_code == 200:
-#            mensagens = json.loads(resposta.text)
-#            payload = set((a, b) for [a,b] in mensagens)
-#            return payload
-#    except MaxRetryError:
-#        print ("Conection Error, numero maximo de tentativas!")
-#    except requests.exceptions.ConnectionError:
-#        print ("Conection Error!")
-#    return set([])
-
 def clientSide():
 	while True:
 		time.sleep(5)
