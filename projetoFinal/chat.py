@@ -28,14 +28,15 @@ def sendMessage():
     m = request.forms.get('arquivo')
     r = myDht.addFile(m)
     if (r is 0):
-        message = "Não foi possível inserir o arquivo, por favor insira o mesmo no servidor "
+        host = myDht.mostLikely(m)
+        message = "Não foi possível inserir o arquivo, por favor insira o mesmo no servidor " + str(myDht.peers[host])
     redirect('/')
 
 @post('/peers')
 def myPeers():
 	host = request.forms.get('id')
 	myDht.addHost(host)
-	data = json.dumps(list(myDht.dht))
+	data = json.dumps(list(myDht.peers))
 	return data
 
 def getPeersFrom(host):
@@ -55,11 +56,11 @@ def serverSide():
     while True:
         time.sleep(5)
         N = set([])
-        for key in myDht.dht:
-            lista = getPeersFrom(myDht.dht[key])
-            if lista.difference(myDht.dht) and lista:
-                N = N.union(lista.difference(myDht.dht))
-                myDht.dht = myDht.dht.union(N)
+        for key in myDht.peers:
+            lista = getPeersFrom(myDht.peers[key])
+            if lista.difference(myDht.peers) and lista:
+                N = N.union(lista.difference(myDht.peers))
+                myDht.peers = myDht.peers.union(N)
 
 #ClienteSide
 @get('/file')
@@ -72,11 +73,11 @@ def clientSide():
 		time.sleep(5)
 		N = set([])
 		global messages
-		for key in myDht.dht:
-			resposta = getMessagesFrom(myDht.dht[key])
-			if resposta.difference(messages) and resposta:
-				N = N.union(resposta.difference(messages))
-		messages = messages.union(N)
+		for key in myDht.peers:
+			resposta = getMessagesFrom(myDht.peers[key])
+#			if resposta.difference(messages) and resposta:
+#				N = N.union(resposta.difference(messages))
+#		messages = messages.union(N)
 
 
 threadClient=Thread(None, clientSide, (), {}, None)
