@@ -8,22 +8,27 @@ import bottle
 from dhtkademlia import dhtkad
 from urllib3.exceptions import MaxRetryError
 
+url = "http://localhost:"
 myId = sys.argv[1]
 myDht = dhtkad(myId)
 firstPeer = sys.argv[2]
 myDht.addHost(firstPeer)
+message = ""
 
 #ServerSide
 @get('/')
 @view('index')
 def index():
-    return 
+    return message
+    
 
 @post('/send')
 def sendMessage():
     global nick
     m = request.forms.get('arquivo')
-    myDht.addFile(m)
+    r = myDht.addFile(m)
+    if (r is 0):
+        message = "Não foi possível inserir o arquivo, por favor insira o mesmo no servidor "
     redirect('/')
 
 @post('/peers')
@@ -34,7 +39,7 @@ def myPeers():
 	return data
 
 def getPeersFrom(host):
-    link = "http://localhost:"+ host + "/peers"
+    link = url + host + "/peers"
     try:
         resposta = requests.post(link, data={'id' : myId})
         if resposta.status_code == 200:
@@ -57,7 +62,7 @@ def serverSide():
                 myDht.dht = myDht.dht.union(N)
 
 #ClienteSide
-@get('/message')
+@get('/file')
 def getPeers():
 	data = json.dumps(list(messages))
 	return data
