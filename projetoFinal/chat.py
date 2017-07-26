@@ -63,25 +63,10 @@ def serverSide():
                 myDht.peers = myDht.peers.union(N)
 
 #ClienteSide
-@get('/file')
-def getPeers():
-	data = json.dumps(list(messages))
-	return data
-
-def clientSide():
-	while True:
-		time.sleep(5)
-		N = set([])
-		global messages
-		for key in myDht.peers:
-			resposta = getMessagesFrom(myDht.peers[key])
-#			if resposta.difference(messages) and resposta:
-#				N = N.union(resposta.difference(messages))
-#		messages = messages.union(N)
 
 
-threadClient=Thread(None, clientSide, (), {}, None)
-threadClient.start()
+#threadClient=Thread(None, clientSide, (), {}, None)
+#threadClient.start()
 threadServer=Thread(None, serverSide, (), {}, None)
 threadServer.start()
 
