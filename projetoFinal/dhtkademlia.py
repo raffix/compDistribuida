@@ -32,6 +32,14 @@ class dhtkad:
             self.peers[hostHash.hexdigest()] = host
         return 1
         
+    def addHosts(self, hostList):
+        hostHash = hashlib.sha256()
+        for host in hostList:
+            host_bytes = host.encode('utf-8')
+            hostHash.update(host_bytes)
+            if(not hostHash.hexdigest() in self.peers):
+                self.peers[hostHash.hexdigest()] = host
+        
     def addFile(self, fileName):
         fileHash = hashlib.sha256()
         fileHash.update(fileName.encode('utf-8'))

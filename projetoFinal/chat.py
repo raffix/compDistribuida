@@ -36,7 +36,7 @@ def sendMessage():
 def myPeers():
 	host = request.forms.get('id')
 	myDht.addHost(host)
-	data = json.dumps(list(myDht.peers))
+	data = json.dumps(list(myDht.peers.values()))
 	return data
 
 def getPeersFrom(host):
@@ -58,15 +58,10 @@ def serverSide():
         N = set([])
         for key in myDht.peers:
             lista = getPeersFrom(myDht.peers[key])
-            if lista.difference(myDht.peers) and lista:
-                N = N.union(lista.difference(myDht.peers))
-                myDht.peers = myDht.peers.union(N)
+            if lista.difference(myDht.peers.values()) and lista:
+                N = N.union(lista.difference(myDht.peers.values()))
+        myDht.addHosts(list(N))
 
-#ClienteSide
-
-
-#threadClient=Thread(None, clientSide, (), {}, None)
-#threadClient.start()
 threadServer=Thread(None, serverSide, (), {}, None)
 threadServer.start()
 
