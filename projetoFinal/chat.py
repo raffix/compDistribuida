@@ -19,8 +19,8 @@ message = ""
 @get('/')
 @view('index')
 def index():
+    global message
     return message
-    
 
 @post('/send')
 def sendMessage():

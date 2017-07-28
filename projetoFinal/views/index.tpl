@@ -11,6 +11,7 @@
 
 <body>
   <h3> DHT Arquivos </h3>
+  <h4>{{message}}</h4>
   <form action="/send" method=POST>
     <div class="row">
       <div class="input-field col s12 m6 g3">
